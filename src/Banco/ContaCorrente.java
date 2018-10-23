@@ -2,8 +2,8 @@ package Banco;
 
 public class ContaCorrente extends Conta{
 		
-	//construtor
-	public ContaCorrente(float saldoInicial) {
+	public ContaCorrente(UsuarioBanco.Correntista correntista,float saldoInicial) {	
+		super(correntista);
 		this.setSaldo(saldoInicial);
 	}
 	
