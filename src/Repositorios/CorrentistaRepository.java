@@ -27,5 +27,21 @@ public class CorrentistaRepository {
 		
 		return resultado;
 	}
+	public Correntista buscarPorNome(String nome) {
+		Correntista resultado = null;
+		for(Correntista correntista: CorrentistaRepository.correntistas) {
+			if(correntista.getNome().equals(nome)) {
+				resultado = correntista;
+				break;
+			}
+		}
+		return resultado;
+	}
 	
+	public void adicionar(Correntista correntista) {
+		CorrentistaRepository.correntistas.add(correntista);
+	}
+	public void remover(Correntista correntista) {
+		CorrentistaRepository.correntistas.remove(correntista);
+	}
 }

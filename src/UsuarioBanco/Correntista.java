@@ -1,5 +1,5 @@
 package UsuarioBanco;
-import Banco.Conta;
+
 public class Correntista {
 	private String nome;
 	private String cpf;
@@ -16,4 +16,19 @@ public class Correntista {
 		this.cpf = cpf;
 	}
 	
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		boolean resultado = false;
+		
+		if(obj.getClass() == this.getClass()) {
+			
+			Correntista other = (Correntista)obj;			
+			resultado = 
+					this.getCpf().equals(other.getCpf());
+		}
+		
+		return resultado;
+	}
 }

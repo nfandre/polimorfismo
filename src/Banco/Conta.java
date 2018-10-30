@@ -7,6 +7,16 @@ public abstract class Conta {
 	private float saldo;
 	Correntista Correntista;
 	private String NumeroConta;
+	public Correntista getCorrentista() {
+		
+		return this.Correntista;
+	}
+
+	public void setCorrentista(Correntista correntista) {
+		Correntista = correntista;
+	}
+
+
 	
 	Conta(Correntista correntista) {
 		this.Correntista = correntista;
@@ -41,7 +51,7 @@ public abstract class Conta {
 	public void exibirConta() {
 		System.out.println("Correntista: "+ Correntista.getNome());
 		System.out.println("CPF: "+ Correntista.getCpf());
-		System.out.println("Número da Conta: "+ this.gerarNumeroConta());
+		System.out.println("Número da Conta: "+ this.getNumeroConta());
 		System.out.println("Saldo: "+ this.getSaldo());
 	}
 
@@ -53,5 +63,25 @@ public abstract class Conta {
 	public void transferirPara(Conta outraConta, float valor) throws Exception {
 		this.retirar(valor);
 		outraConta.depositar(valor);
+	}
+	
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		boolean resultado = false;
+		
+		if(obj.getClass() == this.getClass()) {
+			
+			Conta other = (Conta)obj;
+			
+			resultado = 
+					this.getNumeroConta().equals(other.getNumeroConta());
+			resultado = resultado &&
+					this.getCorrentista().equals(other.getCorrentista());
+		}
+		
+		return resultado;
 	}
 }

@@ -1,9 +1,11 @@
-import java.util.Scanner;
+ import java.util.Scanner;
 
 import Banco.Conta;
 import Banco.ContaCorrente;
 import Banco.ContaInvestimento;
 import Banco.ContaPoupanca;
+import Repositorios.ContaRepository;
+import Repositorios.CorrentistaRepository;
 import UsuarioBanco.Correntista;
 
 public class App {
@@ -43,26 +45,36 @@ public class App {
 		((ContaInvestimento)ci).render();
 		System.out.println("Saldo Investimento: "+ci.getSaldo()); */
 		
-		
+		CorrentistaRepository correntistaRepository = new CorrentistaRepository();
+		ContaRepository  contaRepository = new ContaRepository();
+		Conta contaExibir;
+		Correntista correntista = new Correntista();
+
 		Scanner ler = new Scanner(System.in);
 		int escolha = 0;
-		while(escolha != 4) {
+		int escolhaInicial = 0;
+		float valor;
+		String busca = null;
+		
+		while(escolhaInicial != 4) {
 			System.out.println("\nBanco asosAbc");
 			
 			System.out.println("1 - Criar: ");
 			System.out.println("2 - Consultar: ");
-			System.out.println("3 - Alterar: ");
+			System.out.println("3 - Transferir: ");
 			System.out.println("4 - Sair");
-			escolha = Integer.parseInt(ler.next());	
+			escolhaInicial = Integer.parseInt(ler.next());	
 			
-			if(escolha == 1) {
+			
+			// criar
+			if(escolhaInicial == 1) {
 				System.out.println("Cadastro do correntista: ");
-				Correntista correntista = new Correntista();
+				correntista = new Correntista();
+				correntistaRepository.adicionar(correntista);
 				System.out.print("Nome: ");
 				correntista.setNome(ler.next());
 				System.out.print("CPF: ");
 				correntista.setCpf(ler.next());
-				
 				System.out.println("Tipo de conta a ser criada: ");
 				System.out.println("1 - Conta Corrente \n2 - Conta Corrente \n3 - Conta Poupança");
 				escolha = Integer.parseInt(ler.next());
@@ -73,11 +85,12 @@ public class App {
 					
 					if(escolha == 1) {
 						System.out.println("Valor do depósito: ");
-						float valor = ler.nextFloat();
+						valor = ler.nextFloat();
 						cc.depositar(valor);
 						System.out.println("Depósito realisado :) ");
 						cc.exibirConta();
 					}
+					contaRepository.adicionar(cc);
 				}
 				if(escolha == 2) {
 					Conta ci = new ContaInvestimento(correntista, 0);
@@ -85,25 +98,87 @@ public class App {
 					escolha = Integer.parseInt(ler.next());
 					if(escolha == 1) {
 						System.out.println("Valor do depósito: ");
-						float valor = ler.nextFloat();
+						valor = ler.nextFloat();
 						ci.depositar(valor);
 						System.out.println("Depósito realisado :) ");
 						ci.exibirConta();
 					}
+					contaRepository.adicionar(ci);
 				}
 				if(escolha == 3) {
-					Conta cp = new ContaInvestimento(correntista, 0);
+					Conta cp = new ContaPoupanca(correntista, 0);
 					System.out.println("Deseja realizar depósito? \n1- Sim \n2 - Não ");
 					escolha = Integer.parseInt(ler.next());
 					if(escolha == 1) {
 						System.out.println("Valor do depósito: ");
-						float valor = ler.nextFloat();
+						valor = ler.nextFloat();
 						cp.depositar(valor);
 						System.out.println("Depósito realisado :) ");
 						cp.exibirConta();
 					}
+					contaRepository.adicionar(cp);
 				}
 				
+			}
+			
+			//consultar
+			if(escolhaInicial == 2) {
+				System.out.println("Consultar por:");
+				System.out.println("1 - CPF");
+				System.out.println("2 - NOME");
+				escolha = Integer.parseInt(ler.next());
+				
+				if(escolha == 1) {
+					System.out.print("Infome o CPF: ");
+					 busca = ler.next();
+					
+					 correntista = correntistaRepository.buscarPorCpf(busca);
+					 contaExibir = contaRepository.buscarContaPorCorrentista(correntista);
+					 
+					 contaExibir.exibirConta();
+				}
+				if(escolha == 2) {
+					System.out.print("Informe o nome:");
+					busca = ler.next();
+					correntista = correntistaRepository.buscarPorNome(busca);
+					
+					contaExibir = contaRepository.buscarContaPorCorrentista(correntista);
+					contaExibir.exibirConta();
+				}
+			}
+			
+			//Depositar
+			if(escolhaInicial ==3) {
+				String cpfSaida, cpfEntrada;
+				Conta contaSaida, contaEntrada;
+				System.out.println("------ Transferência -----");
+				System.out.print("Transferir de (cpf): ");
+				cpfSaida = ler.next();
+				 if(correntistaRepository.buscarPorCpf(cpfSaida)!= null) {
+					 	correntista = correntistaRepository.buscarPorCpf(cpfSaida);
+					 	contaSaida = contaRepository.buscarContaPorCorrentista(correntista);
+					 	contaSaida.exibirConta();
+						
+					 	System.out.println("Valor a ser Transferido: ");
+					 	valor = ler.nextFloat();
+						System.out.print("Transferir para (cpf): "); 
+						cpfEntrada = ler.next();
+						if(correntistaRepository.buscarPorCpf(cpfEntrada)!= null) {
+
+							
+							correntista = correntistaRepository.buscarPorCpf(cpfEntrada);
+							
+							contaEntrada = contaRepository.buscarContaPorCorrentista(correntista);
+							contaEntrada.exibirConta();
+							contaSaida.transferirPara(contaEntrada, valor);
+						 	
+							
+							System.out.println("Resultado da Transferência\n");				
+						 	contaSaida.exibirConta();
+						 	System.out.println("\n");
+						 	contaEntrada.exibirConta();
+						}
+				 }
 			}
 			
 			
@@ -114,10 +189,10 @@ public class App {
 	}
 	
 	
-	public static void exibirSaldo(Conta cc, Conta cp, Conta ci) {
+	/*public static void exibirSaldo(Conta cc, Conta cp, Conta ci) {
 		System.out.println("Poupança: " + cc.getSaldo());
 		System.out.println("Corrente: " + cp.getSaldo());
 		System.out.println("Investimento: " + ci.getSaldo() );
-	}
+	}*/
 
 }
