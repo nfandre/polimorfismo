@@ -3,7 +3,7 @@ package Banco;
 public class ContaPoupanca extends Conta {
 	//construtor
 	public ContaPoupanca(UsuarioBanco.Correntista correntista,float saldoInicial) {
-		super(correntista);
+		super(correntista, TipoConta.Poupanca);
 		this.setSaldo(saldoInicial);
 	}
 	

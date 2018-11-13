@@ -7,6 +7,12 @@ public abstract class Conta {
 	private float saldo;
 	Correntista Correntista;
 	private String NumeroConta;
+	
+	Conta(Correntista correntista, TipoConta tipoConta) {
+		this.Correntista = correntista;
+		setNumeroConta();
+	}
+	
 	public Correntista getCorrentista() {
 		
 		return this.Correntista;
@@ -14,13 +20,6 @@ public abstract class Conta {
 
 	public void setCorrentista(Correntista correntista) {
 		Correntista = correntista;
-	}
-
-
-	
-	Conta(Correntista correntista) {
-		this.Correntista = correntista;
-		setNumeroConta();
 	}
 	
 	protected void setSaldo(float valor) {
@@ -55,8 +54,9 @@ public abstract class Conta {
 		System.out.println("Saldo: "+ this.getSaldo());
 	}
 
-	public abstract void depositar(float valor);
-		
+	public void depositar(float valor) {
+		this.setSaldo(this.getSaldo() + valor) ;
+	}	
 	
 	public abstract void retirar(float valor);
 	                                                                                     

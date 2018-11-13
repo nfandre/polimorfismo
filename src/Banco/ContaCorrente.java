@@ -3,7 +3,7 @@ package Banco;
 public class ContaCorrente extends Conta{
 		
 	public ContaCorrente(UsuarioBanco.Correntista correntista,float saldoInicial) {	
-		super(correntista);
+		super(correntista, TipoConta.Corrente);
 		this.setSaldo(saldoInicial);
 	}
 	
@@ -12,11 +12,6 @@ public class ContaCorrente extends Conta{
 		this.setSaldo(this.getSaldo() - valor);
 	}
 	
-	@Override
-	public void depositar(float valor) {
-		this.setSaldo(this.getSaldo() + valor) ;
-	}
-
 
 
 }

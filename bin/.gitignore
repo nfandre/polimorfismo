@@ -1,5 +1,9 @@
 /App.class
 /Banco/
-/UsuarioBanco/
-/frmMenu.class
 /Repositorios/
+/UsuarioBanco/
+/Controller/
+/CorrentistaCadastro.class
+/ContaCadastro.class
+/Menu.class
+/MenuBasico.class

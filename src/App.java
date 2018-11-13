@@ -4,6 +4,7 @@ import Banco.Conta;
 import Banco.ContaCorrente;
 import Banco.ContaInvestimento;
 import Banco.ContaPoupanca;
+import Banco.TipoConta;
 import Repositorios.ContaRepository;
 import Repositorios.CorrentistaRepository;
 import UsuarioBanco.Correntista;
@@ -12,44 +13,16 @@ public class App {
 
 	public static void main(String[] args) throws Exception {
 		
-
-		/*
-		Conta cc = new ContaCorrente(1000);
-		Conta cp = new ContaPoupanca(1000);
-		Conta ci = new ContaInvestimento(1000);		
-		System.out.println("--------- Saldo Inicial ----------");
-		exibirSaldo(cc,cp,ci);
 		
-
-		cc.depositar(100);
-		cp.depositar(100);
-		ci.depositar(100);	
-		System.out.println("\n------- Saldo após depósito ------");
-		exibirSaldo(cc,cp,ci);
-
-
-		cp.retirar(100);
-		cc.retirar(100);
-		ci.retirar(100);		
-		System.out.println("\n-------- Saldo após retirar ------");
-		exibirSaldo(cc,cp,ci);
-		
-		cp.transferirPara(ci, 100);
-		ci.transferirPara(cc, 50);
-		cc.transferirPara(cp, 200);
-		System.out.println("\n-------- Saldo após transferência----");
-		exibirSaldo(cc,cp,ci);
-		
-		System.out.println("\nSaldo da conta investimento após render duas vezes");
-		((ContaInvestimento)ci).render();
-		((ContaInvestimento)ci).render();
-		System.out.println("Saldo Investimento: "+ci.getSaldo()); */
-		
+		ContaCadastro contaCadastro;
 		CorrentistaRepository correntistaRepository = new CorrentistaRepository();
+		CorrentistaCadastro correntistaCadastro = new CorrentistaCadastro();
+		TipoConta tipoConta = null;
 		ContaRepository  contaRepository = new ContaRepository();
 		Conta contaExibir;
 		Correntista correntista = new Correntista();
-
+		
+		
 		Scanner ler = new Scanner(System.in);
 		int escolha = 0;
 		int escolhaInicial = 0;
@@ -65,60 +38,32 @@ public class App {
 			System.out.println("4 - Sair");
 			escolhaInicial = Integer.parseInt(ler.next());	
 			
-			
 			// criar
-			if(escolhaInicial == 1) {
-				System.out.println("Cadastro do correntista: ");
-				correntista = new Correntista();
-				correntistaRepository.adicionar(correntista);
-				System.out.print("Nome: ");
-				correntista.setNome(ler.next());
-				System.out.print("CPF: ");
-				correntista.setCpf(ler.next());
+			if(escolhaInicial == 1) {		
+				
+				correntista = correntistaCadastro.correntistaCadastrar();
 				System.out.println("Tipo de conta a ser criada: ");
 				System.out.println("1 - Conta Corrente \n2 - Conta Corrente \n3 - Conta Poupança");
 				escolha = Integer.parseInt(ler.next());
-				if(escolha == 1) {
-					Conta cc = new ContaCorrente(correntista, 0);
-					System.out.println("Deseja realizar depósito? \n1- Sim \n2 - Não ");
-					escolha = Integer.parseInt(ler.next());
-					
-					if(escolha == 1) {
-						System.out.println("Valor do depósito: ");
-						valor = ler.nextFloat();
-						cc.depositar(valor);
-						System.out.println("Depósito realisado :) ");
-						cc.exibirConta();
-					}
-					contaRepository.adicionar(cc);
-				}
-				if(escolha == 2) {
-					Conta ci = new ContaInvestimento(correntista, 0);
-					System.out.println("Deseja realizar depósito? \n1- Sim \n2 - Não ");
-					escolha = Integer.parseInt(ler.next());
-					if(escolha == 1) {
-						System.out.println("Valor do depósito: ");
-						valor = ler.nextFloat();
-						ci.depositar(valor);
-						System.out.println("Depósito realisado :) ");
-						ci.exibirConta();
-					}
-					contaRepository.adicionar(ci);
-				}
-				if(escolha == 3) {
-					Conta cp = new ContaPoupanca(correntista, 0);
-					System.out.println("Deseja realizar depósito? \n1- Sim \n2 - Não ");
-					escolha = Integer.parseInt(ler.next());
-					if(escolha == 1) {
-						System.out.println("Valor do depósito: ");
-						valor = ler.nextFloat();
-						cp.depositar(valor);
-						System.out.println("Depósito realisado :) ");
-						cp.exibirConta();
-					}
-					contaRepository.adicionar(cp);
-				}
+				switch(escolha) {
+					case 1: 
+						tipoConta = TipoConta.Corrente;
+					case 2: 
+						tipoConta = TipoConta.Poupanca;
+					case 3: 
+						tipoConta = TipoConta.Investimento;
+				}			
+				contaCadastro = new ContaCadastro(correntista, tipoConta);
 				
+				System.out.println("Deseja realizar depósito? \n1- Sim \n2 - Não ");
+				escolha = Integer.parseInt(ler.next());
+					
+				if(escolha == 1) {
+					System.out.println("Valor do depósito: ");
+					valor = ler.nextFloat();
+					contaCadastro.realizarDeposito(valor);
+				}
+				contaCadastro.exibirConta();
 			}
 			
 			//consultar
@@ -187,12 +132,5 @@ public class App {
 			
 		
 	}
-	
-	
-	/*public static void exibirSaldo(Conta cc, Conta cp, Conta ci) {
-		System.out.println("Poupança: " + cc.getSaldo());
-		System.out.println("Corrente: " + cp.getSaldo());
-		System.out.println("Investimento: " + ci.getSaldo() );
-	}*/
 
 }
